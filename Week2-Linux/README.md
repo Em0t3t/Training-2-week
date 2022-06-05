@@ -197,7 +197,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
     + git diff /dev/null flag.txt
     + ip -force -batch flag.txt
     + ss -a -F flag.txt
-    + . ls \`\<flag.txt\` hoặc ls $(\<flag.txt) (**ls** chỉ làm màu thôi, chứ như này cũng xong game rồi **$(\<flag.txt)** :vv)
+    + **ls \`\<flag.txt\`** hoặc **ls $(\<flag.txt)** (**ls** chỉ làm màu thôi, chứ như này cũng xong game rồi **$(\<flag.txt)** :vv)
 
 ### Advanced - thoát khỏi rbash
 
