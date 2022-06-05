@@ -6,7 +6,7 @@
 
 ## Challenge 2
 - Link: https://overthewire.org/wargames/bandit
-- Yêu cầu: Giải challenge chỉ trong vòng 1 command và filter kết quả trong output.
+- Yêu cầu: Giải challenge chỉ trong vòng 1 dòng command và filter kết quả trong output.
 ### 1. Level 0 - Level 1:
 ```sh
 sshpass -p bandit0 ssh bandit0@bandit.labs.overthewire.org -p 2220
@@ -120,7 +120,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
     f.close()
     ```
 - Ở đây ta có thể nhận thấy flag rất có thể nằm trong file **/tmp/flag.txt**, tuy nhiên nếu hệ thống chạy file **run.sh** thì sau khi chạy xong file **run.sh** này thì file **/tmp/flag.txt** cũng sẽ bị xóa ---> **file bị xóa trong linux** ????
-![image](picture/pic61.png)
+
 
 ### Some background 
 - Trước kia (ngay cả khi lúc mình ra cái đề này) mình nghĩ là với mỗi 1 file trong hệ thống linux thì nội dung của file đó sẽ được lưu trong 1 vùng nhớ nào đó trong ổ cứng và tên file bằng 1 cách nào đó sẽ được trỏ đến vùng nhớ này. Và lúc mình xóa file (bằng rm chứ không phải move vào Trash đâu nha mấy cha :vv) thì vùng nhớ đó cũng sẽ được giải phóng (free). Tuy nhiên sự thật không phải đơn giản như vậy.
@@ -138,7 +138,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 
 ### Khai thác challenge này
 - Trên hệ thống server này tác gỉả đã cấu hình permission cho các file **.profile**, **.bashrc** không đúng, cho phép user sau khi login vào hệ thống có thể sửa đổi các file này. Mình sẽ giới thiệu 2 trường hợp có thể khai thác từ lỗ hổng này.
-    + Phương án 1: 1 người chơi nào đó có thể chèn đoạn code sau vào trong file **.profile** nhằm để logout toàn bộ người chơi đăng nhập vào server với ip không thuộc IP cho phép. Tuy nhiên cách này thì cũng đơn giản mà lại quá lộ liễu, người chơi có thể dễ dàng thay đổi lại file **.profile** từ bên ngoài mà không cần login thao tác với server từ bên trong.
+    + Phương án 1: 1 người chơi nào đó có thể chèn đoạn code sau vào trong file **.profile** nhằm để logout toàn bộ người chơi đăng nhập vào server với IP không thuộc IP cho phép. Tuy nhiên cách này thì cũng đơn giản mà lại quá lộ liễu, người chơi có thể dễ dàng thay đổi lại file **.profile** từ bên ngoài mà không cần login thao tác với server từ bên trong.
         ```sh
         #! /bin/sh
         white_ip='117.2.164.216'
@@ -157,13 +157,17 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 ### Solution:
 - Với mô tả của challenge: flag được chia làm 3 phần và đang được lưu trong 1 process nào đó. Thì chúng ta có thể tìm kiếm trong chính process này xem sao.
 - Đầu tiên chúng ta có thể tìm kiếm tên của chương trình cũng như cách chương trình này được chạy bằng cách mở file **/proc/self/cmdline**
+
 ![image](picture/31.png)
 - Ở đây ta có thể nhận thấy 2 vấn đề. 
     + Ta nhận thấy có chuỗi **FLAG3** và bằng tâm linh ta có thể cảm nhận nó đã bị encode bằng **base64**. Sau khi decode ta được 1 mảnh của flag. 
+
     ![image](picture/32.png)
     + Cách chương trình được chạy: rất có khả năng **/home/chall/bec265bdb3402951d638d0a3bb86a9ea** là file thực thi, còn **___FLAG3:aW5fdGhlX3Byb2Nlc3NfaXRzZWxmfQ==\_\_\_** là 1 tham số khi chương trình này được chạy. Khi đó để chắc chắn ta có thể kiểm tra ở file **/proc/self/maps**.
+
     ![image](picture/pic33.png)
     + Lúc này ta có thể thử đọc file thực thi bằng cách đọc file **/home/chall/bec265bdb3402951d638d0a3bb86a9ea** hoặc file **/proc/self/exe**... Và chúng ta có được mảnh thứ 2 của flag.
+
     ![image](picture/pic34.png)
 - Cuối cùng bằng biện pháp tâm linh hoặc nhờ hint của tác giả, chúng ta biết được mảnh flag cuối cùng của flag sẽ được **export** vào trong 1 biến môi trường và được loaded vào process khi chương trình chạy. Để kiểm tra danh sách biến môi trường của 1 process ta có thể kiểm tra ở file **/proc/self/environ** ... Và chúng ta có được mảnh flag cuối cùng.
  
@@ -174,31 +178,35 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 - Link: nc 167.172.68.241 2003
 ### Phân tích challenge
 - Sau khi truy cập challenge, ta có thể nhận ra ngay ta đang đứng trong 1 hệ thống linux nào đấy và còn được phép thực thi lệnh. Tuy nhiên đa phần các command đều bị lỗi và không thực thi được, thông qua thông tin lỗi xuất ra màn hình thì ta biết được chúng ta đang sử dụng **rbash** shell, chứ không phải **bash** hay **dash** mà chúng ta thường sử dụng. Để hiểu hơn về **rbash** shell, các bạn có thể tham khảo bằng cách **man rbash**.
+
 ![image](picture/pic41.png)
 - Có 1 hạn chế rất đặc trưng ở **rbash** shell đó là chúng ta không được phép có kí tự **/** trong tên của command. Ví dụ gõ **/bin/ls -la** sẽ bị lỗi. 
 - Tiếp theo vì 1 số lệnh thông dụng đều bị lỗi **command not found** nên khả năng cao biến môi trường **PATH** cũng đã bị chỉnh sửa, không còn lưu các giá trị như **/bin** hay **/usr/bin** như mặc định nữa.
+
 ![image](picture/pic42.png)
 - Sau khi kiểm tra thì ta thấy biến môi trường **PATH** đang lưu giá trị **/home/chall/bin**, điều đó có nghĩa là ta chỉ có thể thực thi được các command được lưu trong thư mục này thôi (really ????).
 - Thật ra thì không hẳn, trong hệ thống linux, ngoài các command được lưu trong các file **bin** thì vẫn còn các **builtin command** (các bạn có thể gõ **help** để xem các command đó). Cơ mà quay lại challenge, vì chúng ta đang ở trong **rbash** shell nên chúng ta cũng không thể sửa lại biến môi trường **PATH** như bình thường được.
 ### Solution
 - Vì trong thư mục **/home/chall/bin** có file **ls** nên ta dễ dàng biết được trong thư mục hiện tại có 1 file **flag.txt**, việc còn lại chỉ là đọc file này thôi. Để đọc được file này thì có 2 hướng: 1 là sử dụng các **builtin command** (cái này mình để dành đến challenge sau sẽ trình bày luôn), 2 là sử dụng 10 command tác giả cho trong thử mục **/home/chall/bin**.
-    1. wc --files0-from flag.txt
-    2. curl file:///home/chall/flag.txt
-    3. date -f flag.txt
-    4. dig -f flag.txt
-    5. file -f flag.txt
-    6. gcc -x c -E flag.txt
-    7. git diff /dev/null flag.txt
-    8. ip -force -batch flag.txt
-    9. ss -a -F flag.txt
-    10. ls \`<flag.txt\` hoặc ls $(<flag.txt) (**ls** chỉ làm màu thôi, chứ như này cũng xong game rồi **$(<flag.txt)** :vv)
+    + wc --files0-from flag.txt
+    + curl file:///home/chall/flag.txt
+    + date -f flag.txt
+    + dig -f flag.txt
+    + file -f flag.txt
+    + gcc -x c -E flag.txt
+    + git diff /dev/null flag.txt
+    + ip -force -batch flag.txt
+    + ss -a -F flag.txt
+    + . ls \`<flag.txt\` hoặc ls $(<flag.txt) (**ls** chỉ làm màu thôi, chứ như này cũng xong game rồi **$(<flag.txt)** :vv)
 
 ### Advanced - thoát khỏi rbash
+
 - Có thể có ae thắc mắc ủa 9 cái command đầu tiên ở đâu mà sao có thể đọc được file hay vậy, thì thứ nhất 9 command đó là 9 command rất thông dụng, thứ 2 về chức năng đọc file của các command này thì tác giả cũng đã được tham khảo từ [link này](https://gtfobins.github.io/).
 - Tiếp tục, có thể sẽ có nhiều ae tìm kiếm về các bài writeup về việc thoát khỏi **rbash** shell như challenge này. Và trong các bài viết đó có bài sẽ đề cập đến cách dùng **vim**, **python**, ... để chúng ta tận dụng những command này để lấy 1 cái shell khác (bash/dash/..) nhưng những writeup này chỉ đề cập 1 vài cách cụ thể cho 1 vài command nào đó chứ không tổng quát, ví dụ như trường hợp challenge này sẽ không có **vim** hay **python** để sài. Mình thì chỉ share thôi chứ mấy cái này cũng "ao trình" mình mà - vâng chính là cái [link khi nãy](https://gtfobins.github.io/).  Dựa vào cái document này thì ta biết trong 10 command tác giả cho có 2 command cho phép chúng ta lấy được cái shell mới, đó là **gcc** và **git**.
     + gcc -wrapper /bin/bash,-s .
     + git trong trường hợp này không sử dụng được vì thiếu 1 số command cần thiết.
 - Sau khi sử dụng câu lệnh **gcc** ở trên, ta sẽ có cái shell **/bin/bash**, lúc này chúng ta có thể thay đổi được biến môi trường **PATH** để sử dụng như bình thường mà không còn bị giới hạn như trước nữa.
+
 ![image](picture/pic43.png)
 
 ## Challenge 6
@@ -220,12 +228,15 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
     ```sh
     echo `<????.txt`
     ```
+
     ![image](picture/pic51.png)
 
 - Sau khi đã có được 1 mảnh flag, tiếp theo chúng ta cần phải liệt kê được tên của 2 file còn lại.
 - Bằng 1 cách tình cờ ta biết command **cat \*** sẽ in ra nội dụng của tất cả các file (trừ hidden file) và error (nếu là thư mục). Và nếu dùng command **cat f1 f2 d1 d2** thì cũng ra kết quả tương tự -> có khi nào **\* = f1 f2 d1 d2**, do đó chúng ta có thể sử dụng **echo \*** vì biết đâu hắn có thể thay thế được cho **ls** và kết quả:
+
 ![image](picture/pic52.png)
 - Nâng cao hơn 1 tí thì **echo** có thể thay thế được cho chức năng chính của **ls**
+
 ![image](picture/pic53.png)
 - Sau khi đã có được tên 2 file còn lại thì chũng ta đã có mảnh 2 của flag, tiếp tục sử dụng **echo** để đọc file chứa mảnh thứ 3 của flag.
 - Flag cuối cùng sẽ là: Em0t3t{Easy_to_bypass_some_linux_restricted_rules}
