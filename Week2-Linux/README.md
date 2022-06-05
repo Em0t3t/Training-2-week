@@ -6,7 +6,7 @@
 
 ## Challenge 2
 - Link: https://overthewire.org/wargames/bandit
-- Yêu cầu: Giải challenge chỉ trong vòng 1 dòng command và filter kết quả trong output.
+- Yêu cầu: Giải mỗi challenge chỉ trong vòng 1 dòng command và filter kết quả trong output.
 ### 1. Level 0 - Level 1:
 ```sh
 sshpass -p bandit0 ssh bandit0@bandit.labs.overthewire.org -p 2220
@@ -158,11 +158,11 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 - Với mô tả của challenge: flag được chia làm 3 phần và đang được lưu trong 1 process nào đó. Thì chúng ta có thể tìm kiếm trong chính process này xem sao.
 - Đầu tiên chúng ta có thể tìm kiếm tên của chương trình cũng như cách chương trình này được chạy bằng cách mở file **/proc/self/cmdline**
 
-![image](picture/31.png)
+![image](picture/pic31.png)
 - Ở đây ta có thể nhận thấy 2 vấn đề. 
     + Ta nhận thấy có chuỗi **FLAG3** và bằng tâm linh ta có thể cảm nhận nó đã bị encode bằng **base64**. Sau khi decode ta được 1 mảnh của flag. 
 
-    ![image](picture/32.png)
+    ![image](picture/pic32.png)
     + Cách chương trình được chạy: rất có khả năng **/home/chall/bec265bdb3402951d638d0a3bb86a9ea** là file thực thi, còn **___FLAG3:aW5fdGhlX3Byb2Nlc3NfaXRzZWxmfQ==\_\_\_** là 1 tham số khi chương trình này được chạy. Khi đó để chắc chắn ta có thể kiểm tra ở file **/proc/self/maps**.
 
     ![image](picture/pic33.png)
