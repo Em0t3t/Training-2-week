@@ -162,13 +162,13 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 - Ở đây ta có thể nhận thấy 2 vấn đề. 
     + Ta nhận thấy có chuỗi **FLAG3** và bằng tâm linh ta có thể cảm nhận nó đã bị encode bằng **base64**. Sau khi decode ta được 1 mảnh của flag. 
 
-    ![image](picture/pic32.png)
+        ![image](picture/pic32.png)
     + Cách chương trình được chạy: rất có khả năng **/home/chall/bec265bdb3402951d638d0a3bb86a9ea** là file thực thi, còn **___FLAG3:aW5fdGhlX3Byb2Nlc3NfaXRzZWxmfQ==\_\_\_** là 1 tham số khi chương trình này được chạy. Khi đó để chắc chắn ta có thể kiểm tra ở file **/proc/self/maps**.
 
-    ![image](picture/pic33.png)
+        ![image](picture/pic33.png)
     + Lúc này ta có thể thử đọc file thực thi bằng cách đọc file **/home/chall/bec265bdb3402951d638d0a3bb86a9ea** hoặc file **/proc/self/exe**... Và chúng ta có được mảnh thứ 2 của flag.
 
-    ![image](picture/pic34.png)
+        ![image](picture/pic34.png)
 - Cuối cùng bằng biện pháp tâm linh hoặc nhờ hint của tác giả, chúng ta biết được mảnh flag cuối cùng của flag sẽ được **export** vào trong 1 biến môi trường và được loaded vào process khi chương trình chạy. Để kiểm tra danh sách biến môi trường của 1 process ta có thể kiểm tra ở file **/proc/self/environ** ... Và chúng ta có được mảnh flag cuối cùng.
  
     ![image](picture/pic35.png)
