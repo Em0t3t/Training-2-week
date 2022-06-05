@@ -171,7 +171,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
     ![image](picture/pic34.png)
 - Cuối cùng bằng biện pháp tâm linh hoặc nhờ hint của tác giả, chúng ta biết được mảnh flag cuối cùng của flag sẽ được **export** vào trong 1 biến môi trường và được loaded vào process khi chương trình chạy. Để kiểm tra danh sách biến môi trường của 1 process ta có thể kiểm tra ở file **/proc/self/environ** ... Và chúng ta có được mảnh flag cuối cùng.
  
-![image](picture/pic35.png)
+    ![image](picture/pic35.png)
 - Và đây là flag của challenge: Em0t3t{There_are_a_lot_of_things_in_the_process_itself}
 
 ## Challenge 5
