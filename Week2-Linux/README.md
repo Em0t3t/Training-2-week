@@ -221,7 +221,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 ### Solution
 - Đầu tiên mình xin liệt kê 1 số cách đọc file bằng các **builtin command** như:
     + . filename hoặc source filename (được nhưng không khuyến khích).
-    + echo $(\<filename) thay vì $(\<filename) (chỉ đẹp nếu file 1 line)
+    + echo \$(\<filename) thay vì \$(\<filename) (chỉ đẹp nếu file 1 line)
     + while read line; do echo $line; done < filename (chuẩn rồi)
     + maybe more
 - Ở challenge này có 3 file và ta đều không biết tên của 3 file này. Tuy nhiên tác giả có gợi ý có 1 file có dạng xxxx.txt. Do đó ta có thể sử dụng ký tự **?** để thay thế cho các ký tự mà chúng ta không biết. Cụ thể là:
