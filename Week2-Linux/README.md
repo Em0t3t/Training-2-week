@@ -207,7 +207,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
     + git trong trường hợp này không sử dụng được vì thiếu 1 số command cần thiết.
 - Sau khi sử dụng câu lệnh **gcc** ở trên, ta sẽ có cái shell **/bin/bash**, lúc này chúng ta có thể thay đổi được biến môi trường **PATH** để sử dụng như bình thường mà không còn bị giới hạn như trước nữa.
 
-![image](picture/pic43.png)
+    ![image](picture/pic43.png)
 
 ## Challenge 6
 - Link: nc 167.172.68.241 2004
