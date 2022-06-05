@@ -158,7 +158,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 - Với mô tả của challenge: flag được chia làm 3 phần và đang được lưu trong 1 process nào đó. Thì chúng ta có thể tìm kiếm trong chính process này xem sao.
 - Đầu tiên chúng ta có thể tìm kiếm tên của chương trình cũng như cách chương trình này được chạy bằng cách mở file **/proc/self/cmdline**
 
-![image](picture/pic31.png)
+    ![image](picture/pic31.png)
 - Ở đây ta có thể nhận thấy 2 vấn đề. 
     + Ta nhận thấy có chuỗi **FLAG3** và bằng tâm linh ta có thể cảm nhận nó đã bị encode bằng **base64**. Sau khi decode ta được 1 mảnh của flag. 
 
