@@ -179,11 +179,11 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 ### Phân tích challenge
 - Sau khi truy cập challenge, ta có thể nhận ra ngay ta đang đứng trong 1 hệ thống linux nào đấy và còn được phép thực thi lệnh. Tuy nhiên đa phần các command đều bị lỗi và không thực thi được, thông qua thông tin lỗi xuất ra màn hình thì ta biết được chúng ta đang sử dụng **rbash** shell, chứ không phải **bash** hay **dash** mà chúng ta thường sử dụng. Để hiểu hơn về **rbash** shell, các bạn có thể tham khảo bằng cách **man rbash**.
 
-![image](picture/pic41.png)
+    ![image](picture/pic41.png)
 - Có 1 hạn chế rất đặc trưng ở **rbash** shell đó là chúng ta không được phép có kí tự **/** trong tên của command. Ví dụ gõ **/bin/ls -la** sẽ bị lỗi. 
 - Tiếp theo vì 1 số lệnh thông dụng đều bị lỗi **command not found** nên khả năng cao biến môi trường **PATH** cũng đã bị chỉnh sửa, không còn lưu các giá trị như **/bin** hay **/usr/bin** như mặc định nữa.
 
-![image](picture/pic42.png)
+    ![image](picture/pic42.png)
 - Sau khi kiểm tra thì ta thấy biến môi trường **PATH** đang lưu giá trị **/home/chall/bin**, điều đó có nghĩa là ta chỉ có thể thực thi được các command được lưu trong thư mục này thôi (really ????).
 - Thật ra thì không hẳn, trong hệ thống linux, ngoài các command được lưu trong các file **bin** thì vẫn còn các **builtin command** (các bạn có thể gõ **help** để xem các command đó). Cơ mà quay lại challenge, vì chúng ta đang ở trong **rbash** shell nên chúng ta cũng không thể sửa lại biến môi trường **PATH** như bình thường được.
 ### Solution
