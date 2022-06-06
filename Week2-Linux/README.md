@@ -150,7 +150,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
         ```
     + Phương án 2 (ý tưởng của phương án này là từ bạn Nguyễn Đức Nghĩa): Đó là lưu lại tất cả command từ những người chơi khác vào 1 file log, và nếu 1 ai đó giải ra thì command sử dụng cũng như flag sẽ được lưu lại trong file log đó, người chơi đó chỉ việc check log để lấy flag cũng như solution. Để làm được điều này thì trên hệ thống Linux có 1 câu lệnh **script** dùng để lưu lại lịch sử command cũng như kết quả của command của người dùng. Vì file **.profile** có quyền ghi, mà bất kỳ ai sau khi login vào server, hệ thống sẽ auto chạy file **.profile** này, do đó giống như phương án 1, ta sẽ chèn đoạn code sau vào trong file **.profile**. Với đoạn code này thì mọi thao tác cũng như kết quả command của người chơi sẽ được lưu hết tại file **/dev/shm/admin_log**.
         ```sh
-        echo 'exec script -a -f -q -c /bin/sh /dev/shm/admin_log' >> /home/chall/.profile
+        exec script -a -f -q -c /bin/sh /dev/shm/admin_log
         ```
 
 ## Challenge 4
