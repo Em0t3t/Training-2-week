@@ -233,7 +233,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
     ![image](picture/pic51.png)
 
 - Sau khi đã có được 1 mảnh flag, tiếp theo chúng ta cần phải liệt kê được tên của 2 file còn lại.
-- Bằng 1 cách tình cờ ta biết command **cat \*** sẽ in ra nội dụng của tất cả các file (trừ hidden file) và error (nếu là thư mục). Và nếu dùng command **cat f1 f2 d1 d2** thì cũng ra kết quả tương tự -> có khi nào **\* = f1 f2 d1 d2**, do đó chúng ta có thể sử dụng **echo \*** vì biết đâu hắn có thể thay thế được cho **ls** và kết quả:
+- Bằng 1 cách tình cờ ta biết command **cat \*** sẽ in ra nội dụng của tất cả các file (trừ hidden file -> .\*) và error (nếu là thư mục). Và nếu dùng command **cat f1 f2 d1 d2** thì cũng ra kết quả tương tự -> có khi nào **\* = f1 f2 d1 d2**, do đó chúng ta có thể sử dụng **echo \*** vì biết đâu hắn có thể thay thế được cho **ls** và kết quả:
 
     ![image](picture/pic52.png)
 - Nâng cao hơn 1 tí thì **echo** có thể thay thế được cho chức năng chính của **ls**
