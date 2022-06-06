@@ -135,7 +135,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 - Có thêm 1 điểm đáng chú ý nữa là trong file **run.sh**, vì hắn chạy file **mywork.py** ở chế độ **background** nên cái dòng xóa file flag.txt vẫn sẽ được chạy dù cho chương trình python chưa chạy xong.
 - Lúc này ta nhận thấy file **flag.txt** đã bị xóa (đúng hơn là đã bị unlink) nhưng vẫn còn 1 process đang mở file **flag.txt** và file **flag.txt** vẫn chưa bị đóng trong process đó. Vậy là **I-node** cũng như nội dung của file **flag.txt** vẫn còn trong ổ cứng và vẫn có thể truy cập thông qua **/proc/10/fd/3**. Cái **PID 10** kia có thể tìm thấy thông qua câu lệnh **ps aux** để tìm **PID** của chương trình python đang chạy, còn file có tên là **3** thì chắc chắn rồi vì code python không xóa file nào trước hay sau khi mở file **flag.txt**, và chỉ mở 1 file **flag.txt** (đoạn này để chắc chắn cứ kiếm tra thư mục **/proc/{PID}/fd** rồi **ls -l** để biết nó link đến file nào).  
 - Sau khi đã lấy được flag thì ae có thể decode ROT13 để lấy flag cuối cùng. 
-- P/s: vì mình build challenge này dựa trên ý tưởng của 1 bài writeup khác nên lúc đó mình chưa biết đến kiến thức sâu xa này, nên nội dung của flag không được khớp lắm. Tuy nhiên vẫn có thể sẽ đúng bởi vì trong code python ở file **mywork.py** có 1 dòng **flag = f.read()** nên nội dung file flag cũng đã được load vào bộ nhớ RAM, chỉ tiếc là mình không đọc được file **mem** hay file **stack**, nếu đọc được thì nội dung của flag lại ok :vv
+- P/s: vì mình build challenge này dựa trên ý tưởng của 1 bài writeup khác nên lúc đó mình chưa biết đến kiến thức sâu xa này, nên nội dung của flag không được khớp lắm. Tuy nhiên vẫn có thể sẽ đúng bởi vì trong code python ở file **mywork.py** có 1 dòng **flag = f.read()** nên nội dung file flag cũng đã được load vào bộ nhớ, chỉ tiếc là mình không đọc được file **mem** hay file **stack**, nếu đọc được thì nội dung của flag lại ok :vv
 
 ### Khai thác challenge này
 - Trên hệ thống server này tác gỉả đã cấu hình permission cho các file **.profile**, **.bashrc** không đúng, cho phép user sau khi login vào hệ thống có thể sửa đổi các file này. Mình sẽ giới thiệu 2 trường hợp có thể khai thác từ lỗ hổng này.
@@ -181,7 +181,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 - Sau khi truy cập challenge, ta có thể nhận ra ngay ta đang đứng trong 1 hệ thống linux nào đấy và còn được phép thực thi lệnh. Tuy nhiên đa phần các command đều bị lỗi và không thực thi được, thông qua thông tin lỗi xuất ra màn hình thì ta biết được chúng ta đang sử dụng **rbash** shell, chứ không phải **bash** hay **dash** mà chúng ta thường sử dụng. Để hiểu hơn về **rbash** shell, các bạn có thể tham khảo bằng cách **man rbash**.
 
     ![image](picture/pic41.png)
-- Có 1 hạn chế rất đặc trưng ở **rbash** shell đó là chúng ta không được phép có kí tự **/** trong tên của command. Ví dụ gõ **/bin/ls -la** sẽ bị lỗi. 
+- Có 1 hạn chế rất đặc trưng ở **rbash** shell đó là chúng ta không được phép có kí tự **/** trong tên của command. Ví dụ gõ **/bin/ls -lA** sẽ bị lỗi. 
 - Tiếp theo vì 1 số lệnh thông dụng đều bị lỗi **command not found** nên khả năng cao biến môi trường **PATH** cũng đã bị chỉnh sửa, không còn lưu các giá trị như **/bin** hay **/usr/bin** như mặc định nữa.
 
     ![image](picture/pic42.png)
@@ -205,7 +205,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 - Có thể có ae thắc mắc ủa 9 cái command đầu tiên ở đâu mà sao có thể đọc được file hay vậy, thì thứ nhất 9 command đó là 9 command rất thông dụng, thứ 2 về chức năng đọc file của các command này thì tác giả cũng đã được tham khảo từ [link này](https://gtfobins.github.io/).
 - Tiếp tục, có thể sẽ có nhiều ae tìm kiếm về các bài writeup về việc thoát khỏi **rbash** shell như challenge này. Và trong các bài viết đó có bài sẽ đề cập đến cách dùng **vim**, **python**, ... để chúng ta tận dụng những command này để lấy 1 cái shell khác (bash/dash/..) nhưng những writeup này chỉ đề cập 1 vài cách cụ thể cho 1 vài command nào đó chứ không tổng quát, ví dụ như trường hợp challenge này sẽ không có **vim** hay **python** để sài. Mình thì chỉ share thôi chứ mấy cái này cũng "ao trình" mình mà - vâng chính là cái [link khi nãy](https://gtfobins.github.io/).  Dựa vào cái document này thì ta biết trong 10 command tác giả cho có 2 command cho phép chúng ta lấy được cái shell mới, đó là **gcc** và **git**.
     + gcc -wrapper /bin/bash,-s .
-    + git trong trường hợp này không sử dụng được vì thiếu 1 số command cần thiết.
+    + git trong trường hợp này không sử dụng được vì thiếu 1 số command và môi trường cần thiết.
 - Sau khi sử dụng câu lệnh **gcc** ở trên, ta sẽ có cái shell **/bin/bash**, lúc này chúng ta có thể thay đổi được biến môi trường **PATH** để sử dụng như bình thường mà không còn bị giới hạn như trước nữa.
 
     ![image](picture/pic43.png)
@@ -222,7 +222,7 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000 | grep -n 2 | cut -d ":" -f2
 ### Solution
 - Đầu tiên mình xin liệt kê 1 số cách đọc file bằng các **builtin command** như:
     + . filename hoặc source filename (được nhưng không khuyến khích).
-    + echo \$(\<filename) thay vì \$(\<filename) (chỉ đẹp nếu file 1 line)
+    + echo \$\(\<filename\) thay vì \$(\<filename) (chỉ đẹp nếu file 1 line)
     + while read line; do echo $line; done < filename (chuẩn rồi)
     + maybe more
 - Ở challenge này có 3 file và ta đều không biết tên của 3 file này. Tuy nhiên tác giả có gợi ý có 1 file có dạng xxxx.txt. Do đó ta có thể sử dụng ký tự **?** để thay thế cho các ký tự mà chúng ta không biết. Cụ thể là:
